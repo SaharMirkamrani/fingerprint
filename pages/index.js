@@ -5,12 +5,8 @@ import { hasEthereum } from '../utils/ethereum'
 import Minter from '../src/artifacts/contracts/Minter.sol/Minter.json'
 import TotalSupply from '../components/TotalSupply'
 import Wallet from '../components/Wallet'
-import YourNFTs from '../components/YourNFTs'
 
 export default function Home() {
-  // Constants
-  const MINT_PRICE = 0.03;
-  const MAX_MINT = 10;
 
   // UI state
   const [mintQuantity, setMintQuantity] = useState(1)
@@ -22,18 +18,6 @@ export default function Home() {
   // Call smart contract to mint NFT(s) from current address
   async function mintNFTs() {
     // Check quantity
-    if ( mintQuantity < 1 ) {
-      setMintMessage('You need to mint at least 1 NFT.')
-      setMintError(true)
-      mintQuantityInputRef.current.focus()
-      return
-    }
-    if ( mintQuantity > MAX_MINT ) {
-      setMintMessage('You can only mint a maximum of 10 NFTs.')
-      setMintError(true)
-      mintQuantityInputRef.current.focus()
-      return
-    }
 
     // Get wallet details
     if(!hasEthereum()) return
@@ -47,12 +31,11 @@ export default function Home() {
         setMintLoading(true);
           // Interact with contract
           const contract = new ethers.Contract(process.env.NEXT_PUBLIC_MINTER_ADDRESS, Minter.abi, signer)
-          const totalPrice = MINT_PRICE * mintQuantity
-          const transaction = await contract.mint(mintQuantity, { value: ethers.utils.parseEther(totalPrice.toString()) })
+          const transaction = await contract.mint("Example")
           await transaction.wait()
 
           mintQuantityInputRef.current.value = 0
-          setMintMessage(`Congrats, you minted ${mintQuantity} token(s)!`)
+          setMintMessage(`Congrats, you minted!`)
           setMintError(false)
       } catch {
         setMintMessage('Connect your wallet first.');
@@ -94,13 +77,6 @@ export default function Home() {
                     <div className="flex">
                       <input
                           className={ ! mintError ? "border p-4 text-center rounded-tl rounded-bl focus:outline-none focus:border-blue-600 w-2/3" : "border border-red-500 p-4 text-center rounded-tl rounded-bl focus:outline-none focus:border-blue-600 w-2/3"}
-                          onChange={ e => setMintQuantity(e.target.value)}
-                          value={mintQuantity}
-                          placeholder="1"
-                          type="number"
-                          min="1"
-                          max="10"
-                          ref={mintQuantityInputRef}
                         />
                       <button
                         className="bg-blue-600 hover:bg-blue-700 text-white py-4 px-8 rounded-tr rounded-br w-1/3"
@@ -115,19 +91,8 @@ export default function Home() {
             </div>
           </>
         ) }
-        <YourNFTs />
-      </main>
 
-      <footer className="mt-20 text-center">
-        <a
-          href="https://github.com/tomhirst/solidity-nextjs-mint-starter/blob/main/README.md"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-600 hover:text-blue-700 mb-8 inline-block"
-        >
-          Read the docs
-        </a>
-      </footer>
+      </main>
     </div>
   )
 }

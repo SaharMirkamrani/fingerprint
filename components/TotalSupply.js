@@ -21,7 +21,6 @@ export default function TotalSupply() {
             }
     
             await getTotalSupply()
-            await getTotalValue()
         
             setLoading(false)
         }
@@ -42,25 +41,11 @@ export default function TotalSupply() {
         }
     }
 
-     // Get total value collected by the smart contract
-     async function getTotalValue() {
-        try {
-          // Interact with contract
-          const provider = new ethers.providers.Web3Provider(window.ethereum)
-          const contract = new ethers.Contract(process.env.NEXT_PUBLIC_MINTER_ADDRESS, Minter.abi, provider)
-          const data = await contract.getBalance()
-      
-          setTotalValue(ethers.utils.formatEther(data).toString());
-        } catch(error) {
-            console.log(error)
-        }
-    }
 
     return (
         <>
             <p>
                 Tokens minted: { loading ? 'Loading...' : `${totalMinted}/${TOTAL}` }<br />
-                Contract value: { loading ? 'Loading...' : `${totalValue}ETH` }
             </p>
         </>
     )
