@@ -1,6 +1,9 @@
+"use strict";
+
 module.exports = {
   purge: [],
-  darkMode: false, // or 'media' or 'class'
+  darkMode: false,
+  // or 'media' or 'class'
   theme: {
     extend: {
       color: {
@@ -18,14 +21,14 @@ module.exports = {
           200: '#F07F9D',
           300: '#EB577F',
           400: '#583950'
-        },
+        }
       }
-    },
+    }
   },
   variants: {
     extend: {
-      cursor: ['disabled'],
-    },
+      cursor: ['disabled']
+    }
   },
-  plugins: [],
-}
+  plugins: []
+};
